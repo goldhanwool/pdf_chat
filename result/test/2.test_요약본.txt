@@ -1,0 +1,86 @@
+
+469>>-----------------------------------------이 문장은 Scaled Dot-Product Attention
+-----------------------------------------
+이 문장은 스케일된 도트-제품 주의사항
+-----------------------------------------
+
+469>>-----------------------------------------이 논문은 Scaled Dot-
+-----------------------------------------
+이 논문은 눈금이 표시된 점-
+-----------------------------------------
+
+469>>-----------------------------------------네, 제가 보낸 문장
+-----------------------------------------
+네, 제가 보낸 문장
+-----------------------------------------
+
+469>>-----------------------------------------네, 저는 주어진 문장을 요약해드릴 수 있습니다. 제가 어떻게 도와드릴까요?
+-----------------------------------------
+네, 저는 주어진 문장을 요약해드릴 수 있습니다. 제가 어떻게 도와드릴까요?
+-----------------------------------------
+
+469>>-----------------------------------------"Scaled Dot-Product Attention and Multi-Head Attention are two components of the attention mechanism. Scaled Dot-Product Attention computes weights for values based on the compatibility function between queries and keys. In practice, attention is computed on sets of queries packed together in a matrix Q, with keys and values also packed into matrices K and V respectively. The output is obtained by multiplying Q, K, and V matrices together. Additive attention and dot-product (multiplicative) attention are commonly used functions for computing compatibility between queries and keys. While both mechanisms perform similarly for small values of d, additive attention outperforms dot-product attention without scaling for larger values of d due to issues with gradients becoming extremely small in regions where softmax has extreme outputs."
+-----------------------------------------
+"스케일드 닷-프로덕트 어텐션과 멀티 헤드 어텐션은 어텐션 메커니즘의 두 가지 요소입니다. Scaleed Dot-Product Attention은 쿼리와 키 간의 호환성 함수를 기반으로 값에 대한 가중치를 계산합니다. 실제로, 키와 값이 각각 행렬 K와 V에 패킹된, 행렬 Q에 함께 패킹된 질의 세트에 대해 주의가 계산된다. 출력은 Q, K, V 행렬을 곱하여 얻어진다. 가산 주의(additive attention) 및 도트 곱(dot-product, 곱) 주의는 일반적으로 쿼리와 키 간의 호환성을 계산하기 위해 사용되는 함수이다. 두 메커니즘 모두 d의 작은 값에 대해 유사하게 수행되지만, softmax가 극단적인 출력을 갖는 영역에서 그라디언트가 극도로 작아지는 문제로 인해 d의 더 큰 값에 대해 확장하지 않고 dot-product 주의를 능가한다."
+-----------------------------------------
+
+469>>-----------------------------------------"Scaled Dot-Product Attention and Multi-Head Attention are two attention mechanisms used in the model. Scaled Dot-Product Attention computes weights for values based on compatibility function of queries with corresponding keys. The input consists of queries, keys, and values of dimension d. We compute dot products between query and all keys, divide each by square root of d, and apply softmax to obtain weights on the values.
+
+In practice, we compute attention function on a set of queries simultaneously packed together into matrix Q. Keys and values are also packed together into matrices K and V respectively. The output is computed as QKT times V.
+
+The two commonly used attention functions are additive attention (using feed-forward network) and dot-product (multiplicative) attention. Dot-product attention is identical to our algorithm except for scaling factor Tm which makes it faster in practice due to highly optimized matrix multiplication code.
+
+Attention(Q,K,V)=softmax(a*a)
+
+While both mechanisms perform similarly for small dj values, additive attention outperforms dot product without scaling for larger dj values where extreme gradients can occur due to large magnitude dot products."
+
+"In multi-head attention instead of performing a single attention function with dmodesi-dimensional keys,values,and queries; linear projections h times using different learned
+-----------------------------------------
+"스케일드 도트-프로덕트 어텐션과 멀티 헤드 어텐션은 모델에 사용되는 두 가지 어텐션 메커니즘이다. Scaleed Dot-Product Attention은 해당 키를 가진 쿼리의 호환성 함수를 기반으로 값에 대한 가중치를 계산합니다. 입력은 쿼리, 키 및 차원 d 값으로 구성됩니다. 우리는 쿼리와 모든 키 사이의 점 곱을 계산하고 각각을 d의 제곱근으로 나눈 다음 softmax를 적용하여 값에 대한 가중치를 얻는다.
+
+실제로 우리는 행렬 Q로 동시에 패킹된 쿼리 세트에 대한 주의 함수를 계산한다. 키들과 값들은 또한 각각 행렬 K와 V에 함께 패킹된다. 출력은 QKT 곱하기 V로 계산됩니다.
+
+일반적으로 사용되는 두 가지 주의 함수는 가산 주의(피드-포워드 네트워크 사용)와 도트-곱 주의(곱셈)이다. 도트 곱 주의력은 고도로 최적화된 행렬 곱 코드로 인해 실제로 더 빠르게 만드는 스케일링 인자 Tm을 제외하고는 우리의 알고리즘과 동일하다.
+
+주의사항(Q,K,V)= softmax(a*a)
+
+두 메커니즘 모두 작은 dj 값에 대해 유사하게 수행되지만, 가산 주의는 큰 크기의 도트 제품으로 인해 극단적인 구배가 발생할 수 있는 더 큰 dj 값에 대해 스케일링 없이 도트 제품을 능가한다."
+
+"dmodes 차원 키, 값 및 쿼리로 단일 주의 기능을 수행하는 대신 다중 헤드 주의; 학습된 다른 방법을 사용하여 선형 투영 h번 수행
+-----------------------------------------
+
+469>>-----------------------------------------문장 요약: Scaled Dot-Product Attention은 입력으로 주어진 쿼리와 키의 점곱을 계산하여 값을 가중치로 사용하는 메커니즘이다. 이를 병렬로 실행되는 여러 개의 어텐션 레이어로 구성된 Multi-Head Attention으로 확장할 수 있다. 실제 구현에서는 매트릭스 연산을 사용하여 동시에 여러 개의 쿼리에 대한 어텐션 함수를 계산한다. Additive Attention과 Dot-Product (Multiplicative) Attention이 가장 일반적인 어텐션 함수 중 두 가지 방법이며, 후자가 성능 면에서 우수하다고 알려져 있다. 그러나 큰 값들에 대해서는 스케일링 문제가 발생할 수 있으므로, dot-product 결과값을 조절하기 위해 scaling factor를 곱해주기
+-----------------------------------------
+문장 요약: Scaled Dot-Product Attention은 입력으로 주어진 쿼리와 키의 점곱을 계산하여 값을 가중치로 사용하는 메커니즘이다. 이를 병렬로 실행되는 여러 개의 어텐션 레이어로 구성된 Multi-Head Attention으로 확장할 수 있다. 실제 구현에서는 매트릭스 연산을 사용하여 동시에 여러 개의 쿼리에 대한 어텐션 함수를 계산한다. Additive Attention과 Dot-Product (Multiplicative) Attention이 가장 일반적인 어텐션 함수 중 두 가지 방법이며, 후자가 성능 면에서 우수하다고 알려져 있다. 그러나 큰 값들에 대해서는 스케일링 문제가 발생할 수 있으므로, dot-product 결과값을 조절하기 위해 scaling factor를 곱해주기
+-----------------------------------------
+
+469>>-----------------------------------------The text discusses the concepts of scaled dot-product attention and multi-head attention. Scaled dot-product attention involves computing the dot products between queries and keys, dividing them by a scaling factor, and applying a softmax function to obtain weights on values. Multi-head attention consists of multiple parallel layers of scaled dot-product attention. The text also mentions that additive attention is another commonly used type of attention mechanism but notes that in practice, dot-product (multiplicative) attention is faster and more space-efficient due to optimized matrix multiplication code implementation. Additionally, it explains how larger values can cause issues with gradients in the softmax function for dot product-based mechanisms.
+
+To address this issue, the authors propose scaling down the dot products by a factor v_r when performing multi-head attentions where q_i_k_j = \frac{q_i}{\sqrt{d}} * k_j^T / \sqrt{d}. They also discuss linearly projecting queries, keys, and values h times using different learned projections before performing parallelized computations to yield d-dimensional outputs.
+
+Overall summary: The text introduces scaled-dot product Attention as well as multi-head Attention which consists of several parallel layers running simultaneously. It explains how these mechanisms work mathematically while highlighting their differences from other types such as
+-----------------------------------------
+본문에서는 스케일된 도트 제품 주의력과 다중 헤드 주의력의 개념에 대해 논의한다. 스케일링된 도트-프로덕트 어텐션은 질의들과 키들 사이의 도트 프로덕트들을 계산하고, 이들을 스케일링 팩터로 나누고, 값들에 대한 가중치들을 얻기 위해 소프트맥스 함수를 적용하는 것을 포함한다. 다중 헤드 어텐션은 스케일링된 도트-제품 어텐션의 복수의 병렬 레이어로 구성된다. 본문은 또한 가산 주의가 일반적으로 사용되는 또 다른 유형의 주의 메커니즘이라고 언급하지만 실제로 점곱(곱) 주의는 최적화된 행렬 곱 코드 구현으로 인해 더 빠르고 공간 효율적이라는 점에 주목한다. 또한, 도트 제품 기반 메커니즘에 대한 소프트맥스 함수에서 값이 클수록 그래디언트에 문제가 발생할 수 있는 방법을 설명한다.
+
+이 문제를 해결하기 위해 저자는 q_i_k_j = \frac{q_i}{\sqrt{d}} * k_j^T / \sqrt{d}에서 다중 헤드 어텐션을 수행할 때 점 제품을 v_r 요인으로 축소할 것을 제안한다. 그들은 또한 d차원 출력을 산출하기 위해 병렬화된 계산을 수행하기 전에 상이한 학습된 프로젝션을 사용하여 선형적으로 프로젝션하는 쿼리, 키 및 값 h번에 대해 논의한다.
+
+전체 요약: 본문에서는 스케일 도트 제품인 어텐션과 동시에 실행되는 여러 병렬 레이어로 구성된 멀티 헤드 어텐션을 소개합니다. 다음과 같은 다른 유형과의 차이점을 강조하면서 이러한 메커니즘이 수학적으로 어떻게 작동하는지 설명한다
+-----------------------------------------
+
+469>>-----------------------------------------문장 요약: "Scaled Dot-Product Attention"은 입력으로 주어진 쿼리와 키의 점곱을 계산하여 값을 가중치로 할당하는 메커니즘입니다. 이를 병렬로 실행하는 여러 개의 어텐션 레이어가 Multi-Head Attention을 구성합니다. 실제로는 Q, K, V에 대한 어텐션 함수를 동시에 계산하고 결과를 행렬 형태로 출력합니다. Scaled Dot-Product Attention은 속도와 공간적인 효율성 면에서 우
+-----------------------------------------
+문장 요약: "Scaled Dot-Product Attention"은 입력으로 주어진 쿼리와 키의 점곱을 계산하여 값을 가중치로 할당하는 메커니즘입니다. 이를 병렬로 실행하는 여러 개의 어텐션 레이어가 Multi-Head Attention을 구성합니다. 실제로는 Q, K, V에 대한 어텐션 함수를 동시에 계산하고 결과를 행렬 형태로 출력합니다. 스케일된 도트-제품 주의사항
+-----------------------------------------
+
+469>>-----------------------------------------The sentence talks about the concepts of scaled dot-product attention and multi-head attention. It explains that scaled dot-product attention computes weights for values based on the compatibility function between queries and keys, while multi-head attention consists of multiple parallel layers of attention. The algorithm involves computing dot products, dividing them by a scaling factor, and applying a softmax function to obtain weights on the values.
+
+In practice, the attention function is computed on sets of queries packed together in a matrix Q, with keys and values also packed together in matrices K and V. The output matrix is computed as QKT times V.
+
+There are two commonly used types of attention functions: additive (or feed-forward) attention and dot-product (or multiplicative)attention. Dot-product attentionsimilar to our algorithm but differs in
+-----------------------------------------
+문장은 축척된 도트 제품 주의력과 다중 머리 주의력의 개념에 대해 이야기한다. 스케일된 도트-프로덕트 어텐션은 쿼리와 키 간의 호환성 함수를 기반으로 값에 대한 가중치를 계산하는 반면, 다중 헤드 어텐션은 여러 병렬 레이어의 어텐션으로 구성된다고 설명한다. 알고리즘은 도트 곱들을 계산하고, 이들을 스케일링 팩터로 나누고, 소프트맥스 함수를 적용하여 값들에 대한 가중치들을 얻는 것을 포함한다.
+
+실제로, 주의 함수는 행렬 Q에 함께 패킹된 질의들의 세트들에 대해 계산되며, 키들 및 값들도 행렬 K 및 V에 함께 패킹된다. 출력 행렬은 QKT 곱하기 V로 계산된다.
+
+일반적으로 사용되는 주의 함수에는 가산(또는 피드포워드) 주의와 도트 곱(또는 곱) 주의의 두 가지 유형이 있다. 우리 알고리즘과 유사하지만 다른 점에서 점 제품 주의력
+-----------------------------------------

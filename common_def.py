@@ -37,6 +37,7 @@ def translate_openai_summary(text, name, page_num):
         #줄바꿈
         f.write('\n'+ page_num + '>>-----------------------------------------'+text+'\n'+'-----------------------------------------'+'\n'+trans_text+'\n'+'-----------------------------------------'+'\n')
         f.close()
+        return trans_text
     except:
         print('번역 실패')
         return None       

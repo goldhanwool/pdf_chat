@@ -1,0 +1,345 @@
+
+Input projection output
+입력투영출력
+
+ w(t-2)
+w(t-2)
+
+ wit+2)
+재치 있는 2)
+
+ Figure 1: The Skip-gram model architecture.
+그림 1: 스킵그램 모델 아키텍처.
+
+The training objective is to learn word vector representations that are good at predicting the nearby words.
+훈련 목적은 주변 단어를 예측하는 것이 좋은 단어 벡터 표현을 학습하는 것이다.
+
+ In this paper we present several extensions of the original Skip-gram model.
+본 논문에서는 기존 스킵그램 모델의 몇 가지 확장을 제시한다.
+
+We show that sub- sampling of frequent words during training results in a significant speedup (around 2x - 10x), and improves accuracy of the representations of less frequent words.
+우리는 훈련 중 빈번한 단어의 하위 샘플링이 상당한 속도 향상(약 2배 - 10배)을 초래하고 빈도가 적은 단어의 표현의 정확도를 향상시킨다는 것을 보여준다.
+
+In addition, we present a simpli- fied variant of Noise Contrastive Estimation (NCE) [4] for training the Skip-gram model that results in faster training and better vector representations for frequent words, compared to more complex hierarchical softmax that was used in the prior work [8].
+또한 이전 작업에서 사용된 보다 복잡한 계층적 소프트맥스에 비해 빈번한 단어에 대해 더 빠른 훈련과 더 나은 벡터 표현을 제공하는 스킵-그램 모델을 훈련하기 위해 NCE(Noise Contrastative Estimation)[4]의 단순 변형을 제시한다.
+
+ Word representations are limited by their inability to represent idiomatic phrases that are not com- positions of the individual words.
+단어 표현은 개별 단어의 구성이 아닌 관용구를 표현할 수 없다는 점에서 한계가 있다.
+
+For example, “Boston Globe” is a newspaper, and so it is not a natural combination of the meanings of “Boston” and “Globe”.
+예를 들어 "보스턴 글로브"는 신문이며, 따라서 "보스턴 글로브"와 "글로브"의 의미를 자연스럽게 조합한 것은 아니다.
+
+Therefore, using vectors to repre- sent the whole phrases makes the Skip-gram model considerably more expressive.
+따라서 벡터를 사용하여 전체 구문을 재전송하는 것은 스킵-그램 모델을 훨씬 더 표현적으로 만든다.
+
+Other techniques that aim to represent meaning of sentences by composing the word vectors, such as the recursive autoencoders [15], would also benefit from using phrase vectors instead of the word vectors.
+단어 벡터를 구성함으로써 문장의 의미를 표현하는 것을 목표로 하는 다른 기술들, 예를 들어 재귀적 자동 인코더[15]는 단어 벡터 대신 구문 벡터를 사용함으로써 또한 이득을 얻을 것이다.
+
+ The extension from word based to phrase based models is relatively simple.
+단어 기반에서 구 기반 모델로 확장하는 것은 비교적 간단하다.
+
+First we identify a large number of phrases using a data-driven approach, and then we treat the phrases as individual tokens during the training.
+먼저 데이터 기반 접근 방식을 사용하여 많은 수의 구문을 식별한 다음 교육 중에 해당 구문을 개별 토큰으로 처리한다.
+
+To evaluate the quality of the phrase vectors, we developed a test set of analogi- cal reasoning tasks that contains both words and phrases.
+구문 벡터의 품질을 평가하기 위해 단어와 구문을 모두 포함하는 아날로그 추론 작업 테스트 세트를 개발했다.
+
+A typical analogy pair from our test set is “Montreal”:“Montreal Canadiens”::“Toronto”:“Toronto Maple Leafs”.
+테스트 세트의 대표적인 비유 쌍은 "Montreal"입니다:"몬트리올 캐나디언스"::"토론토":'토론토 단풍잎'.
+
+It is considered to have been answered correctly if the nearest representation to vec(“Montreal Canadiens”) - vec(“Montreal”) + vec(“Toronto”’) is vec(““Toronto Maple Leafs”).
+만약 vec("몬트리올 캐나디언스")-vec("몬트리올")-vec("토론토")-vec("토론토")에 가장 가까운 표현이 vec("토론토 메이플 리프스")일 경우 정답으로 간주된다.
+
+ Finally, we describe another interesting property of the Skip-gram model.
+마지막으로, 우리는 스킵그램 모델의 또 다른 흥미로운 속성을 설명한다.
+
+We found that simple vector addition can often produce meaningful results.
+우리는 단순 벡터 덧셈이 종종 의미 있는 결과를 만들어낼 수 있다는 것을 발견했다.
+
+For example, vec(“Russia”) + vec(“river”) is close to vec(““Volga River”), and vec(““Germany”) + vec(“capital’”) is close to vec(“Berlin”).
+예를 들어, 러시아(Russia) vec는 볼가 강(Volga River)에 가깝고, 독일(Germany)은 수도(Velin)에 가깝다.
+
+This compositionality suggests that a non-obvious degree of language understanding can be obtained by using basic mathematical operations on the word vector representations.
+이러한 구성성은 단어 벡터 표현에 대한 기본적인 수학적 연산을 사용함으로써 언어 이해의 명백하지 않은 정도를 얻을 수 있음을 시사한다.
+
+ 2 The Skip-gram Model
+2 스킵그램 모델
+
+ The training objective of the Skip-gram model is to find word representations that are useful for predicting the surrounding words in a sentence or a document.
+Skip-gram 모델의 훈련 목적은 문장이나 문서에서 주변 단어를 예측하는 데 유용한 단어 표현을 찾는 것이다.
+
+More formally, given a sequence of training words wj, we, w3,..., wr, the objective of the Skip-gram model is to maximize the average log probability
+좀 더 공식적으로, 일련의 훈련 단어 wj, 우리, w3,..., wr이 주어졌을 때, 스킵-그램 모델의 목적은 평균 로그 확률을 최대화하는 것이다
+
+Input projection output
+입력투영출력
+
+ w(t-2)
+w(t-2)
+
+ wit+2)
+재치 있는 2)
+
+ Figure 1: The Skip-gram model architecture.
+그림 1: 스킵그램 모델 아키텍처.
+
+The training objective is to learn word vector representations that are good at predicting the nearby words.
+훈련 목적은 주변 단어를 예측하는 것이 좋은 단어 벡터 표현을 학습하는 것이다.
+
+ In this paper we present several extensions of the original Skip-gram model.
+본 논문에서는 기존 스킵그램 모델의 몇 가지 확장을 제시한다.
+
+We show that sub- sampling of frequent words during training results in a significant speedup (around 2x - 10x), and improves accuracy of the representations of less frequent words.
+우리는 훈련 중 빈번한 단어의 하위 샘플링이 상당한 속도 향상(약 2배 - 10배)을 초래하고 빈도가 적은 단어의 표현의 정확도를 향상시킨다는 것을 보여준다.
+
+In addition, we present a simpli- fied variant of Noise Contrastive Estimation (NCE) [4] for training the Skip-gram model that results in faster training and better vector representations for frequent words, compared to more complex hierarchical softmax that was used in the prior work [8].
+또한 이전 작업에서 사용된 보다 복잡한 계층적 소프트맥스에 비해 빈번한 단어에 대해 더 빠른 훈련과 더 나은 벡터 표현을 제공하는 스킵-그램 모델을 훈련하기 위해 NCE(Noise Contrastative Estimation)[4]의 단순 변형을 제시한다.
+
+ Word representations are limited by their inability to represent idiomatic phrases that are not com- positions of the individual words.
+단어 표현은 개별 단어의 구성이 아닌 관용구를 표현할 수 없다는 점에서 한계가 있다.
+
+For example, “Boston Globe” is a newspaper, and so it is not a natural combination of the meanings of “Boston” and “Globe”.
+예를 들어 "보스턴 글로브"는 신문이며, 따라서 "보스턴 글로브"와 "글로브"의 의미를 자연스럽게 조합한 것은 아니다.
+
+Therefore, using vectors to repre- sent the whole phrases makes the Skip-gram model considerably more expressive.
+따라서 벡터를 사용하여 전체 구문을 재전송하는 것은 스킵-그램 모델을 훨씬 더 표현적으로 만든다.
+
+Other techniques that aim to represent meaning of sentences by composing the word vectors, such as the recursive autoencoders [15], would also benefit from using phrase vectors instead of the word vectors.
+단어 벡터를 구성함으로써 문장의 의미를 표현하는 것을 목표로 하는 다른 기술들, 예를 들어 재귀적 자동 인코더[15]는 단어 벡터 대신 구문 벡터를 사용함으로써 또한 이득을 얻을 것이다.
+
+ The extension from word based to phrase based models is relatively simple.
+단어 기반에서 구 기반 모델로 확장하는 것은 비교적 간단하다.
+
+First we identify a large number of phrases using a data-driven approach, and then we treat the phrases as individual tokens during the training.
+먼저 데이터 기반 접근 방식을 사용하여 많은 수의 구문을 식별한 다음 교육 중에 해당 구문을 개별 토큰으로 처리한다.
+
+To evaluate the quality of the phrase vectors, we developed a test set of analogi- cal reasoning tasks that contains both words and phrases.
+구문 벡터의 품질을 평가하기 위해 단어와 구문을 모두 포함하는 아날로그 추론 작업 테스트 세트를 개발했다.
+
+A typical analogy pair from our test set is “Montreal”:“Montreal Canadiens”::“Toronto”:“Toronto Maple Leafs”.
+테스트 세트의 대표적인 비유 쌍은 "Montreal"입니다:"몬트리올 캐나디언스"::"토론토":'토론토 단풍잎'.
+
+It is considered to have been answered correctly if the nearest representation to vec(“Montreal Canadiens”) - vec(“Montreal”) + vec(“Toronto”’) is vec(““Toronto Maple Leafs”).
+만약 vec("몬트리올 캐나디언스")-vec("몬트리올")-vec("토론토")-vec("토론토")에 가장 가까운 표현이 vec("토론토 메이플 리프스")일 경우 정답으로 간주된다.
+
+ Finally, we describe another interesting property of the Skip-gram model.
+마지막으로, 우리는 스킵그램 모델의 또 다른 흥미로운 속성을 설명한다.
+
+We found that simple vector addition can often produce meaningful results.
+우리는 단순 벡터 덧셈이 종종 의미 있는 결과를 만들어낼 수 있다는 것을 발견했다.
+
+For example, vec(“Russia”) + vec(“river”) is close to vec(““Volga River”), and vec(““Germany”) + vec(“capital’”) is close to vec(“Berlin”).
+예를 들어, 러시아(Russia) vec는 볼가 강(Volga River)에 가깝고, 독일(Germany)은 수도(Velin)에 가깝다.
+
+This compositionality suggests that a non-obvious degree of language understanding can be obtained by using basic mathematical operations on the word vector representations.
+이러한 구성성은 단어 벡터 표현에 대한 기본적인 수학적 연산을 사용함으로써 언어 이해의 명백하지 않은 정도를 얻을 수 있음을 시사한다.
+
+ 2 The Skip-gram Model
+2 스킵그램 모델
+
+ The training objective of the Skip-gram model is to find word representations that are useful for predicting the surrounding words in a sentence or a document.
+Skip-gram 모델의 훈련 목적은 문장이나 문서에서 주변 단어를 예측하는 데 유용한 단어 표현을 찾는 것이다.
+
+More formally, given a sequence of training words wj, we, w3,..., wr, the objective of the Skip-gram model is to maximize the average log probability
+좀 더 공식적으로, 일련의 훈련 단어 wj, 우리, w3,..., wr이 주어졌을 때, 스킵-그램 모델의 목적은 평균 로그 확률을 최대화하는 것이다
+
+Input projection output
+입력투영출력
+
+ w(t-2)
+w(t-2)
+
+ wit+2)
+재치 있는 2)
+
+ Figure 1: The Skip-gram model architecture.
+그림 1: 스킵그램 모델 아키텍처.
+
+The training objective is to learn word vector representations that are good at predicting the nearby words.
+훈련 목적은 주변 단어를 예측하는 것이 좋은 단어 벡터 표현을 학습하는 것이다.
+
+ In this paper we present several extensions of the original Skip-gram model.
+본 논문에서는 기존 스킵그램 모델의 몇 가지 확장을 제시한다.
+
+We show that sub- sampling of frequent words during training results in a significant speedup (around 2x - 10x), and improves accuracy of the representations of less frequent words.
+우리는 훈련 중 빈번한 단어의 하위 샘플링이 상당한 속도 향상(약 2배 - 10배)을 초래하고 빈도가 적은 단어의 표현의 정확도를 향상시킨다는 것을 보여준다.
+
+In addition, we present a simpli- fied variant of Noise Contrastive Estimation (NCE) [4] for training the Skip-gram model that results in faster training and better vector representations for frequent words, compared to more complex hierarchical softmax that was used in the prior work [8].
+또한 이전 작업에서 사용된 보다 복잡한 계층적 소프트맥스에 비해 빈번한 단어에 대해 더 빠른 훈련과 더 나은 벡터 표현을 제공하는 스킵-그램 모델을 훈련하기 위해 NCE(Noise Contrastative Estimation)[4]의 단순 변형을 제시한다.
+
+ Word representations are limited by their inability to represent idiomatic phrases that are not com- positions of the individual words.
+단어 표현은 개별 단어의 구성이 아닌 관용구를 표현할 수 없다는 점에서 한계가 있다.
+
+For example, “Boston Globe” is a newspaper, and so it is not a natural combination of the meanings of “Boston” and “Globe”.
+예를 들어 "보스턴 글로브"는 신문이며, 따라서 "보스턴 글로브"와 "글로브"의 의미를 자연스럽게 조합한 것은 아니다.
+
+Therefore, using vectors to repre- sent the whole phrases makes the Skip-gram model considerably more expressive.
+따라서 벡터를 사용하여 전체 구문을 재전송하는 것은 스킵-그램 모델을 훨씬 더 표현적으로 만든다.
+
+Other techniques that aim to represent meaning of sentences by composing the word vectors, such as the recursive autoencoders [15], would also benefit from using phrase vectors instead of the word vectors.
+단어 벡터를 구성함으로써 문장의 의미를 표현하는 것을 목표로 하는 다른 기술들, 예를 들어 재귀적 자동 인코더[15]는 단어 벡터 대신 구문 벡터를 사용함으로써 또한 이득을 얻을 것이다.
+
+ The extension from word based to phrase based models is relatively simple.
+단어 기반에서 구 기반 모델로 확장하는 것은 비교적 간단하다.
+
+First we identify a large number of phrases using a data-driven approach, and then we treat the phrases as individual tokens during the training.
+먼저 데이터 기반 접근 방식을 사용하여 많은 수의 구문을 식별한 다음 교육 중에 해당 구문을 개별 토큰으로 처리한다.
+
+To evaluate the quality of the phrase vectors, we developed a test set of analogi- cal reasoning tasks that contains both words and phrases.
+구문 벡터의 품질을 평가하기 위해 단어와 구문을 모두 포함하는 아날로그 추론 작업 테스트 세트를 개발했다.
+
+A typical analogy pair from our test set is “Montreal”:“Montreal Canadiens”::“Toronto”:“Toronto Maple Leafs”.
+테스트 세트의 대표적인 비유 쌍은 "Montreal"입니다:"몬트리올 캐나디언스"::"토론토":'토론토 단풍잎'.
+
+It is considered to have been answered correctly if the nearest representation to vec(“Montreal Canadiens”) - vec(“Montreal”) + vec(“Toronto”’) is vec(““Toronto Maple Leafs”).
+만약 vec("몬트리올 캐나디언스")-vec("몬트리올")-vec("토론토")-vec("토론토")에 가장 가까운 표현이 vec("토론토 메이플 리프스")일 경우 정답으로 간주된다.
+
+ Finally, we describe another interesting property of the Skip-gram model.
+마지막으로, 우리는 스킵그램 모델의 또 다른 흥미로운 속성을 설명한다.
+
+We found that simple vector addition can often produce meaningful results.
+우리는 단순 벡터 덧셈이 종종 의미 있는 결과를 만들어낼 수 있다는 것을 발견했다.
+
+For example, vec(“Russia”) + vec(“river”) is close to vec(““Volga River”), and vec(““Germany”) + vec(“capital’”) is close to vec(“Berlin”).
+예를 들어, 러시아(Russia) vec는 볼가 강(Volga River)에 가깝고, 독일(Germany)은 수도(Velin)에 가깝다.
+
+This compositionality suggests that a non-obvious degree of language understanding can be obtained by using basic mathematical operations on the word vector representations.
+이러한 구성성은 단어 벡터 표현에 대한 기본적인 수학적 연산을 사용함으로써 언어 이해의 명백하지 않은 정도를 얻을 수 있음을 시사한다.
+
+ 2 The Skip-gram Model
+2 스킵그램 모델
+
+ The training objective of the Skip-gram model is to find word representations that are useful for predicting the surrounding words in a sentence or a document.
+Skip-gram 모델의 훈련 목적은 문장이나 문서에서 주변 단어를 예측하는 데 유용한 단어 표현을 찾는 것이다.
+
+More formally, given a sequence of training words wj, we, w3,..., wr, the objective of the Skip-gram model is to maximize the average log probability
+좀 더 공식적으로, 일련의 훈련 단어 wj, 우리, w3,..., wr이 주어졌을 때, 스킵-그램 모델의 목적은 평균 로그 확률을 최대화하는 것이다
+
+npu
+npu
+
+ Figure—ll Ml pelSkip-gramimodeliarchitecture Ml beltraminofobyectiveli Moll carniwordivectomrepresentations foarte oodfatipredictingythcinearbyfwords,
+그림 - ll MlpelSkip-gramimodeli 아키텍처 Mlbeltraminofo by ectiveli Moll carniwordivectom 표현은 단어 근처의 치아 지방을 예측하는 표현이다,
+
+ Tali Epaperpespresentiseveralfex tensjon Boi fincforiginalfskip-gram—model Wels bowR nalisup.
+Tali Epaperpes는 원래 fskip-gram에 대한 여러 fex tensjon Boi finc 모델인 Welsbow Rnalisup을 나타낸다.
+
+mprovespecune foi iaggrepresentationgiod Ress#trequentfyor TS Biya dition Biesppresentfypimpl Re MhvarantolNosAC ontrastival-tipalookK NCE M4 Modtrammefindskip-erammogelnatrccultd
+mprovest specune foiag 표현 기간 Ress #trequentfy or TS Biyadition Biesprepresentifyimpl ReMhvarantolNosAC ontrastival-tipalookK NCE M4 Modtrammefindskip-erammogelnatrccultd
+
+ nierarchicalisottmaxithatiwasmusedmnithelprioniworkd 8 | |
+nierarchical isottmaxithati nitelpioni worked 8 | |
+
+ Word}representationseresl mite ib yfineuinabilityfiofre present dlomauciphrasesithalereino eon position Solin dndwigualkwords Bronexample § Boston lobe Vimemnewepaper san meen i aoe!
+Word} 표현은 매우 미세한 유용성에 의해 fiofre 제시 dlomaucipraseithalreino on position Solinndwigualkords Bron 예를 들어 § 보스턴 로브 Vimemnewaper san meeniae!
+
+ Daruralcombinatonbottincmeanme fof Boston Sandk Glope Ml herefore JusinghvectorMonrepres Senin wn ole}phrasestmake dip dokip-erambmodelfconsiderabl yimererex pressive FO tnerftechniques ha farmltosrepresent#meanin gfe entence db yfcomposingkindlwordivectors Iouchiesiindirecursiva A utocncoderdl 15] Iwouldicolbenenltrombusing|phrasfvectordinstcafoninchwordivectors,
+Boston Sandk Glope Ml의 Darural Combinat bottin mean manmef with Jusinghvector Monrepresent Seninnwole}프레이즈는 딥 도킵-에람브 모델을 상당히 압축적으로 만든다. farmtos repressive fortnerf 기술은 #의미있는 문장을 표현한다 composing kindword vector Iouchiesiindirecursiva Autocoddl 15] 나는 ltrombusing을 할 것이다,
+
+ UT heflex ten ionitromiwordibaseditosphrasefbasedimodel sictrelativelygsimple SrirstWendentifypallarge}
+Ut flexten ionitromi word는 비교적 단순한 모델인 이토스프라제 기반 모델을 기반으로 했습니다. SrirstWendentifypall large}
+
+ num beotiphrasesfusin gaidata-drivenfapproach JandithenWertreatithfphrasesfatindividualitokend
+num beotiprase는 데이터 기반 접근 방식 J와 Wertithfrase fat individual itend를 융합한다
+
+ Puringhibofiaining COE val alc Piuality Ep aphrascfvectors Pemevclope dal R TE Tinalogiy
+Puringhibofiaining COEvalal Pialic Epaphrascfvectors Pemevclope dal RTE Tinalogy
+
+ padfreasonin ofS SID gion as ol ordsa phrases | Baltypicallana oe vipat og
+sSIDgion의 padfreasonin as olordsa 문구 | 발티컬 알라나 오에비바토그
+
+ Montreal”.
+몬트리올'.
+
+Montreallc to”:“Toronto|MaplefL eats” Mt diconsidereditoshavel —
+Montreallc to ":"Toronto|MaplefLeats" Mt diconsesiditoshavel --
+
+ Bo swore dieorrect niueueagrepresentarionfatvect Montreal Veot" Montreal issvec(“ lorontogMaplefLeatfs”) |
+보위드 다이어 직립 니에아그 대표자 몬트리얼 베트 "몬트리얼 이스베크" ("loront to Maplef Leatfs") |
+
+ Finally Beso bea poiheuginteresting9proper Bsn beIkip-sramigode] BYVAL a dELaFimple an FURAN wo TST TATE ATEN PEST 12 ETAT WOW ussia egvec( river Wd Closeomvec(’ Volgafiver”) Jand ect capital Widicloccolvec( Berlin") NT his nsingibasiimathematical Pet net ordivectorn
+마지막으로 베소베아 포이허그 흥미로운 9가지 적절한 BsnbeIkip-sramigode] BYVAL 및 ELA 단순 푸란 두 개의 주 페스트 12 ETAT WOWUSIA egvec(리버 Wd Closeomvec('볼가피버')) 얀덱트 수도 위디클로콜벡(베를린) NT 싱기바시마수학적 펫넷 또는 다이브엑터
+
+ DO 6uivs Mod Th trainingfobjectivelo inES kip-eramiinode ll Momo ditworcfrepresentationsfthalereiusctulitor
+DO 6uivs Mod 객관적인 loin Eskip-eramiinodell Momoditworcf 표현은 hale reius tululator
+
+ predictingi}essurroundin sword di plaisep teed trainin gjword Mim] $3... .
+칼 폐기 훈련 jword Mim] $3...에 둘러싸여 있음을 예측합니다.
+
+FW mibebobjective loggprobability
+FW mibebo 객관적 로그 확률
+
+ of nels kip-sraminodo Molnasmmizchcpveraee
+nels kip-sraminodo Molnasmmizchcpverae의
+
+Input projection output
+입력투영출력
+
+ w(t-2)
+w(t-2)
+
+ wit+2)
+재치 있는 2)
+
+ Figure 1: The Skip-gram model architecture.
+그림 1: 스킵그램 모델 아키텍처.
+
+The training objective is to learn word vector representations that are good at predicting the nearby words.
+훈련 목적은 주변 단어를 예측하는 것이 좋은 단어 벡터 표현을 학습하는 것이다.
+
+ In this paper we present several extensions of the original Skip-gram model.
+본 논문에서는 기존 스킵그램 모델의 몇 가지 확장을 제시한다.
+
+We show that sub- sampling of frequent words during training results in a significant speedup (around 2x - 10x), and improves accuracy of the representations of less frequent words.
+우리는 훈련 중 빈번한 단어의 하위 샘플링이 상당한 속도 향상(약 2배 - 10배)을 초래하고 빈도가 적은 단어의 표현의 정확도를 향상시킨다는 것을 보여준다.
+
+In addition, we present a simpli- fied variant of Noise Contrastive Estimation (NCE) [4] for training the Skip-gram model that results in faster training and better vector representations for frequent words, compared to more complex hierarchical softmax that was used in the prior work [8].
+또한 이전 작업에서 사용된 보다 복잡한 계층적 소프트맥스에 비해 빈번한 단어에 대해 더 빠른 훈련과 더 나은 벡터 표현을 제공하는 스킵-그램 모델을 훈련하기 위해 NCE(Noise Contrastative Estimation)[4]의 단순 변형을 제시한다.
+
+ Word representations are limited by their inability to represent idiomatic phrases that are not com- positions of the individual words.
+단어 표현은 개별 단어의 구성이 아닌 관용구를 표현할 수 없다는 점에서 한계가 있다.
+
+For example, “Boston Globe” is a newspaper, and so it is not a natural combination of the meanings of “Boston” and “Globe”.
+예를 들어 "보스턴 글로브"는 신문이며, 따라서 "보스턴 글로브"와 "글로브"의 의미를 자연스럽게 조합한 것은 아니다.
+
+Therefore, using vectors to repre- sent the whole phrases makes the Skip-gram model considerably more expressive.
+따라서 벡터를 사용하여 전체 구문을 재전송하는 것은 스킵-그램 모델을 훨씬 더 표현적으로 만든다.
+
+Other techniques that aim to represent meaning of sentences by composing the word vectors, such as the recursive autoencoders [15], would also benefit from using phrase vectors instead of the word vectors.
+단어 벡터를 구성함으로써 문장의 의미를 표현하는 것을 목표로 하는 다른 기술들, 예를 들어 재귀적 자동 인코더[15]는 단어 벡터 대신 구문 벡터를 사용함으로써 또한 이득을 얻을 것이다.
+
+ The extension from word based to phrase based models is relatively simple.
+단어 기반에서 구 기반 모델로 확장하는 것은 비교적 간단하다.
+
+First we identify a large number of phrases using a data-driven approach, and then we treat the phrases as individual tokens during the training.
+먼저 데이터 기반 접근 방식을 사용하여 많은 수의 구문을 식별한 다음 교육 중에 해당 구문을 개별 토큰으로 처리한다.
+
+To evaluate the quality of the phrase vectors, we developed a test set of analogi- cal reasoning tasks that contains both words and phrases.
+구문 벡터의 품질을 평가하기 위해 단어와 구문을 모두 포함하는 아날로그 추론 작업 테스트 세트를 개발했다.
+
+A typical analogy pair from our test set is “Montreal”:“Montreal Canadiens”::“Toronto”:“Toronto Maple Leafs”.
+테스트 세트의 대표적인 비유 쌍은 "Montreal"입니다:"몬트리올 캐나디언스"::"토론토":'토론토 단풍잎'.
+
+It is considered to have been answered correctly if the nearest representation to vec(“Montreal Canadiens”) - vec(“Montreal”) + vec(“Toronto”’) is vec(““Toronto Maple Leafs”).
+만약 vec("몬트리올 캐나디언스")-vec("몬트리올")-vec("토론토")-vec("토론토")에 가장 가까운 표현이 vec("토론토 메이플 리프스")일 경우 정답으로 간주된다.
+
+ Finally, we describe another interesting property of the Skip-gram model.
+마지막으로, 우리는 스킵그램 모델의 또 다른 흥미로운 속성을 설명한다.
+
+We found that simple vector addition can often produce meaningful results.
+우리는 단순 벡터 덧셈이 종종 의미 있는 결과를 만들어낼 수 있다는 것을 발견했다.
+
+For example, vec(“Russia”) + vec(“river”) is close to vec(““Volga River”), and vec(““Germany”) + vec(“capital’”) is close to vec(“Berlin”).
+예를 들어, 러시아(Russia) vec는 볼가 강(Volga River)에 가깝고, 독일(Germany)은 수도(Velin)에 가깝다.
+
+This compositionality suggests that a non-obvious degree of language understanding can be obtained by using basic mathematical operations on the word vector representations.
+이러한 구성성은 단어 벡터 표현에 대한 기본적인 수학적 연산을 사용함으로써 언어 이해의 명백하지 않은 정도를 얻을 수 있음을 시사한다.
+
+ 2 The Skip-gram Model
+2 스킵그램 모델
+
+ The training objective of the Skip-gram model is to find word representations that are useful for predicting the surrounding words in a sentence or a document.
+Skip-gram 모델의 훈련 목적은 문장이나 문서에서 주변 단어를 예측하는 데 유용한 단어 표현을 찾는 것이다.
+
+More formally, given a sequence of training words wj, we, w3,..., wr, the objective of the Skip-gram model is to maximize the average log probability
+좀 더 공식적으로, 일련의 훈련 단어 wj, 우리, w3,..., wr이 주어졌을 때, 스킵-그램 모델의 목적은 평균 로그 확률을 최대화하는 것이다

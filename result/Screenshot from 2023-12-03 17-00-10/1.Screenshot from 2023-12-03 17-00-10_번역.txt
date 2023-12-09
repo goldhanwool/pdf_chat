@@ -1,0 +1,123 @@
+
+Table 5: Evaluation of SBERT sentence embeddings using the SentEval toolkit.
+표 5: SentEval 툴킷을 이용한 SBERT 문장 임베딩 평가.
+
+s by training a logistic regression classifier using the sentence
+문장을 사용하여 로지스틱 회귀 분류기를 훈련함으로써 s
+
+ ation tasl
+이온 타슬
+
+ embeddings on different sentence classi
+다른 문장 등급에 대한 임베딩
+
+ Mode MR_|_CR_| SUBJ | MPOA | SST_[ TREC | MRPC Avg.
+모드 MR_|_CR_| SUBJ | MPOA | SST_[TREC | MRPC Avg.
+
+‘Avg.
+아브.
+
+GloVe embeddings [77.25 78.30 | 91.17 | 87.85 [ROIS | 830 | 7287 | S152 Avg.
+GloVe 임베딩 [77.25 78.30 | 91.17 | 87.85 [ROIS | 830 | 7287 | S152 Avg.
+
+fasttext embeddings | 77.96 79.23 | 91.68 | 87.81 | 82.15 | 836 | 7449 | 8242 ‘Avg.
+빠른 텍스트 임베딩 | 77.9 79.23 | 91.68 | 87.81 | 82.15 | 836 | 7449 | 8242 'Avg.
+
+BERT embeddings 78.66 86.25 | 94.37 | 88.66 | 8440] 928 | 69.45 |} 8404 BERT CLS-vector 78.68 84.85 | 94.21 | 88.23 | 84.13] 914 | 71.13 | 84.66 InferSent - GloVe 8157 86.54 | 92.50 | 90.38 | 84.18] 882 | 75.77 | 8559 Universal Sentence Encoder | 80,09 85.19 | 93.98 | 86.70 | 86.38 | 932 | 70.14 || 85.10 SBERT-NLTbase Ba6d 8943 | 94.30 | 80.86 | RR9G | 89.6 | 76.00 | 87AT SBERT-NLMlarge 84.88 90.07 | 94.52 | 90.33 | 90.66 | 874 | 75.94 | 87.69
+BERT 임베딩 78.66 86.25 | 94.37 | 88.66 | 8440] 928 | 69.45 |} 8404 BERT CLS-벡터 78.68 84.85 | 94.21 | 88.23 | 84.13 | 914 | 84.66 Infer Sent - GloVe 8157 86.54 | 92.50 | 90.38 | 84.18] 882 | 75.77 | 8559 Universal Sention Encoder | 80,09 85.19 | 93.98 | 86.38 | 932 | 70.14 | 85.10 SBERT-NLTbase Ba6d 8943 | 94.30 | 80.77 | 85.10.86 | RR9G | 89.6 | 76.00 | 87AT SBERT-NLMarge 84.88 90.07 | 94.52 | 90.33 | 90.66 | 874 | 75.94 | 87.69
+
+ SentEval evaluates sentence
+SentEval이 문장을 평가합니다
+
+ embeddings as features.
+특징으로서의 임베딩.
+
+Scores are based on a 10-fold cross-validation.
+점수는 10배 교차 검증을 기반으로 한다.
+
+ It appears that the sentence embeddings from SBERT capture well sentiment information: We observe large improvements for all sentiment tasks (MR, CR, and SST) from SentEval in comparison to InferSent and Ui
+SBERT의 문장 임베딩은 감정 정보를 잘 포착하는 것으로 보인다: 우리는 InferSent 및 Ui에 비해 SentEval의 모든 감정 작업(MR, CR 및 SST)에 대해 큰 개선을 관찰한다
+
+ The only dataset where SBERT is significantly worse than Universal Sentence Encoder is the TREC dataset.
+SBERT가 Universal Sentence Encoder보다 현저하게 나쁜 데이터 세트는 TREC 데이터 세트뿐이다.
+
+Universal Sentence Encoder was pre-trained on question-answering data, which ap- pears to be beneficial for the question-type classi- fication task of the TREC dataset.
+범용 문장 인코더(Universal Sentence Encoder)는 TREC 데이터 세트의 질문 유형 분류 작업에 유용한 것으로 보이는 질문 응답 데이터에 대해 사전 교육을 받았다.
+
+ Average BERT embeddings or using the CLS token output from a BERT network achieved bad results for various STS tasks (Table 1), worse than average GloVe embeddings.
+평균 BERT 임베딩 또는 BERT 네트워크로부터의 CLS 토큰 출력을 사용하는 것은 다양한 STS 작업에 대해 나쁜 결과를 얻었으며(표 1), 이는 평균 GloVe 임베딩보다 더 나빴다.
+
+However, for Sent- Eval, average BERT embeddings and the BERT CLS-token output achieves decent results (Ta- ble 5), outperforming average GloVe embeddings.
+그러나 Sent-Eval의 경우 평균 BERT 임베딩과 BERT CLS-token 출력이 평균 GloVe 임베딩을 능가하는 양호한 결과(표 5)를 달성한다.
+
+‘The reason for this are the different setups.
+'그 이유는 설정이 다르기 때문입니다.
+
+For the STS tasks, we used cosine-similarity to es- timate the similarities between sentence embed- dings.
+STS 작업의 경우 코사인 유사성을 사용하여 문장 임베딩 간의 유사성을 추정했다.
+
+Cosine-similarity treats all dimensions equally.
+코사인 유사성은 모든 차원을 동등하게 취급한다.
+
+In contrast, SentEval fits a logistic regres- sion classifier to the sentence embeddings.
+대조적으로, SentEval는 로지스틱 회귀 분류기를 문장 임베딩에 적합시킨다.
+
+This allows that certain dimensions can have higher or lower impact on the classification result,
+이는 특정 차원이 분류 결과에 더 높거나 더 낮은 영향을 미칠 수 있음을 허용한다,
+
+ We conclude that average BERT embeddings / 1S-token output from BERT return sentence em- beddings that are infeasible to be used with cosine- similarity or with Manhatten / Euclidean distance.
+우리는 BERT에서 평균 BERT 임베딩 / 1S-token 출력이 코사인 유사성 또는 맨하튼 / 유클리드 거리로 사용할 수 없는 반환 문장 e-침구라고 결론지었다.
+
+For transfer learning, they yield slightly worse results than InferSent or Universal Sentence En- coder.
+전이 학습의 경우, 그들은 Under Sent 또는 Universal Sentence En-coder보다 약간 더 나쁜 결과를 산출한다.
+
+However, using the described fine-tuning setup with a siamese network structure on NLT datasets yields sentence embeddings that achieve a new state-of-the-art for the SentEval toolkit.
+그러나 NLT 데이터 세트에서 동일한 네트워크 구조와 함께 설명된 미세 조정 설정을 사용하면 SentEval 툴킷의 새로운 최첨단을 달성하는 문장 임베딩이 생성된다.
+
+ jiversal Sentence Encoder.
+jibersal Sentence Encoder입니다.
+
+ this section, we perform an ablation study of dif- ferent aspects of SBERT in order to get a better understanding of their relative importanc
+이 섹션에서는 SBERT의 상대적 중요성을 더 잘 이해하기 위해 SBERT의 다양한 측면에 대한 절제 연구를 수행한다
+
+ We evaluated different pooling strategies (MEAN, MAX, and CLS).
+서로 다른 풀링 전략(MEAN, MAX, CLS)을 평가하였다.
+
+For the classification objective function, we evaluate different concate- nation methods.
+분류 목적 함수의 경우, 우리는 다양한 콘케이트-네이션 방법을 평가한다.
+
+For each possible configuration, we train SBERT with 10 different random seeds and average the performances
+가능한 각 구성에 대해 10개의 서로 다른 랜덤 시드로 SBERT를 훈련하고 성능을 평균화한다
+
+ The objective function (classification vs. regres- sion) depends on the annotated dataset.
+목적 함수(분류 대 회귀)는 주석이 달린 데이터 세트에 따라 달라진다.
+
+For the classification objective function, we train SBERT- base on the SNLI and the Multi-NLI dataset.
+분류 목적 함수를 위해 SNLI와 Multi-NLI 데이터 세트를 기반으로 SBERT 기반을 훈련한다.
+
+For the regression objective function, we train on the training set of the STS benchmark dataset.
+회귀 목적 함수를 위해 STS 벤치마크 데이터 세트의 훈련 세트에 대해 훈련한다.
+
+Perfor- mances are measured on the development split of the STS benchmark dataset.
+성과는 STS 벤치마크 데이터 세트의 개발 분할에서 측정된다.
+
+Results are shown in Table 6.
+그 결과는 <표 6>과 같다.
+
+ NUT STSb Pooling Strategy ME: 80.78 87.44 MAX 79.07 69.92 cis 79.80 _ 86.62 Concatenation
+NUT STSb 풀링 전략 ME: 80.78 87.44 MAX 79.07 69.92 cis 79.80 _ 86.62 연결
+
+ Cr a (uw) 69.78 - (ux) S54 + {ju v],u*0) Bae (u,v, us v) T7144 - (u,v, u—v)) 80.78 -
+Cr a (uw) 69.78 - (ux) S54   {ju v],u*0) Bae (u,v, us v) T7144 - (u,v, u—v)) 80.78 -
+
+ viuviuer) 8044 -
+viuviuer) 8044 -
+
+ Table 6: SBERT trained on NLI data with the clas- sification objective function, on the STS benchmark (STSb) with the regression objective function.
+표 6: SBERT는 STS 벤치마크(STSb)에서 분류 목적 함수가 있는 NLI 데이터에 대해 훈련했다.
+
+Con- figurations are evaluated on the development set of the STSb using cosine-similarity and Spearman's rank cor- relation, For the concatenation methods, we only report scores with MEAN pooling strategy.
+구성은 코사인 유사성과 Spearman의 순위 상관 관계를 사용하여 STSb의 개발 세트에서 평가되며, 연결 방법의 경우 MEAN 풀링 전략으로 점수만 보고한다.
+
+ When trained with the classification objective
+분류 목표를 가지고 교육할 때

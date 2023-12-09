@@ -2,8 +2,8 @@
 Scaled Dot-Product Attention Multi-Head Attention
 스케일된 도트-제품 주의 멀티 헤드 주의
 
- | v
-| v
+ | Vv
+| Vv
 
  Figure 2: (left) Scaled Dot-Product Attention.
 그림 2: (왼쪽) Scale Dot-Product 주의점.
@@ -23,8 +23,8 @@ Scaled Dot-Product Attention Multi-Head Attention
 The input consists of queries and keys of dimension d,, and values of dimension d,.
 입력은 차원 d의 쿼리 및 키, 차원 d의 값으로 구성된다.
 
-We compute the dot products of the query with all keys, divide each by dy, and apply a softmax function to obtain the weights on the values.
-우리는 모든 키로 쿼리의 도트 곱을 계산하고, 각각을 dy로 나누고, 값에 대한 가중치를 얻기 위해 소프트맥스 함수를 적용한다.
+We compute the dot products of the query with all keys, divide each by /d,, and apply a softmax function to obtain the weights on the values.
+우리는 모든 키로 쿼리의 도트 곱을 계산하고 각각을 /d로 나누고 소프트맥스 함수를 적용하여 값에 대한 가중치를 얻는다.
 
  In practice, we compute the attention function on a set of queries simultaneously, packed together into a matrix Q.
 실제로, 우리는 행렬 Q로 함께 포장된 일련의 쿼리에 대한 주의 함수를 동시에 계산한다.
@@ -38,8 +38,8 @@ QKT Vay
  The two most commonly used attention functions are additive attention [2], and dot-product (multi- plicative) attention.
 가장 일반적으로 사용되는 두 가지 주의 함수는 가산 주의[2]와 점 곱 주의(다중 곱하기)이다.
 
-Dot-product attention is identical to our algorithm, except for the scaling factor of vr: Additive attention computes the compatibility function using a feed-forward network with a single hidden layer.
-점 제품 주의는 vr: 가산 주의는 단일 은닉 계층이 있는 피드 포워드 네트워크를 사용하여 호환성 함수를 계산하는 것을 제외하고는 우리의 알고리즘과 동일하다.
+Dot-product attention is identical to our algorithm, except for the scaling factor of Tm: Additive attention computes the compatibility function using a feed-forward network with a single hidden layer.
+점 제품 주의는 Tm의 스케일링 인자를 제외하고는 우리의 알고리즘과 동일하다: 가산 주의는 단일 은닉 계층을 가진 피드 포워드 네트워크를 사용하여 호환성 함수를 계산한다.
 
 While the two are similar in theoretical complexity, dot-product attention is much faster and more space-efficient in practice, since it can be implemented using highly optimized matrix multiplication code.
 이 둘은 이론적 복잡성이 유사하지만, 도트 곱 주의는 매우 최적화된 행렬 곱 코드를 사용하여 구현할 수 있기 때문에 실제로 훨씬 빠르고 공간 효율적이다.
@@ -47,8 +47,8 @@ While the two are similar in theoretical complexity, dot-product attention is mu
  Attention(Q, K, V) = softmax
 주의사항(Q, K, V) = softmax
 
- WV a)
-WVa)
+ a a)
+a)
 
  While for small values of dj, the two mechanisms perform similarly, additive attention outperforms dot product attention without scaling for larger values of d; [3].
 dj의 작은 값의 경우, 두 메커니즘이 유사하게 수행되지만, d의 더 큰 값에 대해 스케일링 없이 가산 주의가 도트 제품 주의를 능가한다; [3].

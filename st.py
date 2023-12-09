@@ -1,3 +1,6 @@
+import streamlit as st
+from main import main_
+
 import cv2
 import numpy as np
 import pytesseract
@@ -18,13 +21,22 @@ import os
 import nltk
 from common_def import *
 import re  
-
-# Tesseract의 설치 경로를 설정합니다 (필요한 경우).
-# 예: Windows에서 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
 nltk.download('punkt')
 
-def main_(file_path, name):
+st.title('PDF Chat')
+
+file = st.file_uploader('파일 업로드', type='png')
+if file:
+    st.write(file)
+    file_contents = file.read()
+    file_path = f"./file/{file.name}"
+    #st.write(file_path)
+    with open(file_path, "wb") as f:
+        f.write(file_contents)
+    
+    # res = main_(file_path, file.name)
+    name = file.name.split('.')[0]
+    print('name: ', name)
     image_path = file_path
 
     folder_path = "./result/" + name         
@@ -48,13 +60,15 @@ def main_(file_path, name):
     most_common_overall_num, overall_count = Counter(v_list).most_common(1)[0]
 
     mask = np.zeros((h, w), dtype=np.uint8)
+    non_mask = np.zeros((h, w), dtype=np.uint8)
+
     for i in range(n_boxes):
         if int(t_info['conf'][i]) > 60:  # 확신도가 60 이상인 경우만 처리
             (x, y, w, h) = (t_info['left'][i], t_info['top'][i], t_info['width'][i], t_info['height'][i])
             if h < int(most_common_overall_num) + 10:
                 # 텍스트 영역 추출
                 mask[y:y+h, x:x+w] = 255
-                
+
     text_regions = cv2.bitwise_and(img, img, mask=mask)
     cv2.imwrite('./output/text_regions.png', text_regions)
 
@@ -64,6 +78,7 @@ def main_(file_path, name):
     cv2.imwrite('./output/non_text_regions.png', non_text_regions)
 
     image = Image.open(image_path)
+    non_image = Image.open('./output/non_text_regions.png')
     #텍스트 추출
     #print('image: ', image)
     text = pytesseract.image_to_string(image)
@@ -93,10 +108,20 @@ def main_(file_path, name):
 
     # 페이지 요약 생성
     openai_text = str(new_list)
-    summary_text = summary_openai(openai_text)
-    trans_text = translate_openai_summary(summary_text, name, page_num)   
 
+    print('openai_text: ', openai_text)
+    summary_text = summarize_text_openai(openai_text)
+    print('summary_text: ', summary_text)
+
+    summary_text = summary_text['choices'][0]["message"]["content"]
+    openai_trans_text = translate_openai_summary(summary_text, name, page_num)   
+    
+    st.subheader('요약')
+    st.write('-----------------------------------------')        
+    st.write(openai_trans_text)
+    st.write('-----------------------------------------') 
     # 파일저장하기
+    st.subheader('원문 번역')
     check_token_list = []
     for i in new_list:
         sent_tokenize_list = sent_tokenize(i)
@@ -108,42 +133,15 @@ def main_(file_path, name):
             #print('check_token_list: >>>>>>>>>>>>')
             #print(check_token_list)
             # 번역파일과 함께 저장하기
-            print('j: ', j)
+            #print('j: ', j)
+
+            st.write(j)
             trans_text = get_translate(j) #PaPaGo 번역
-            
+            st.write(trans_text)
             f=open('./result/{}/1.{}_번역.txt'.format(name, name),'a',encoding='utf-8')
             #줄바꿈
             f.write('\n'+j+'\n'+trans_text+'\n')
             f.close()
-
-
-
-#표 영역 추출
-# import cv2
-# import numpy as np
-
-# def extract_non_table_areas(image_path):
-#     img = cv2.imread(image_path)
-#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#     thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)[1]
-
-#     # 윤곽선 찾기
-#     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-#     # 전체 이미지 크기의 마스크를 생성
-#     mask = np.ones(img.shape[:2], dtype="uint8") * 255
-
-#     for contour in contours:
-#         x, y, w, h = cv2.boundingRect(contour)
-#         # 마스크에서 표 영역을 검은색으로 채워 넣습니다
-#         cv2.rectangle(mask, (x, y), (x+w, y+h), 0, -1)
-
-#     # 마스크를 이용하여 표 영역을 제외한 부분만을 추출
-#     non_table_regions = cv2.bitwise_and(img, img, mask=mask)
-
-#     # 결과 이미지 저장
-#     cv2.imwrite('non_table_regions.jpg', non_table_regions)
-
-# # 이미지 경로
-# image_path = 'page_0.jpg'
-# extract_non_table_areas(image_path)
+    
+    st.image(non_image, caption='Paper Image', use_column_width=True)
+    st.write('번역완료')

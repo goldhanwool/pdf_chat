@@ -1,0 +1,132 @@
+
+arX1v:1908.10084v1 [cs.CL] 27 Aug 2019
+arX1v:1908.10084v1 [cs.CL] 2019년 8월 27일
+
+ Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks
+문장-BERT: Samese BERT-Networks를 이용한 문장 임베딩
+
+ Nils Reimers and Iryna Gurevych Ubiquitous Knowledge Processing Lab (UKP-TUDA) Department of Computer Science, Technische Universitit Darmstadt www.ukp.tu-darmstadt .de
+닐스 라이머스와 이리나 구레비치 유비쿼터스 지식 처리 연구소(UKP-TUDA) 컴퓨터 과학과 다름슈타트 www.ukp.tu-darm슈타트.de
+
+ Abstract
+추상적인
+
+ BERT (Devlin et al., 2018) and RoBERTa (Liu et al., 2019) has set a new state-of-the-art performance on sentence-pair regression tasks like semantic textual similarity (STS).
+BERT(Devlin et al., 2018)와 RoBERTa(Liu et al., 2019)는 의미론적 텍스트 유사성(STS)과 같은 문장 쌍 회귀 작업에 대한 새로운 최신 성능을 설정했다.
+
+How- ever, it requires that both sentences are fed into the network, which causes a massive com- putational overhead: Finding the most sim- r in a collection of 10,000 sentences about 50 million inference computa- tions (~65 hours) with BERT.
+그러나 두 문장이 모두 네트워크에 입력되어야 하며, 이는 엄청난 계산 오버헤드를 야기한다: BERT로 약 5천만 개의 추론 계산(~65시간)에 대해 10,000개의 문장 모음에서 가장 유사한 것을 찾는다.
+
+The construction of BERT makes it unsuitable for semantic sim- ilarity search as well as for unsupervised tasks like clustering.
+BERT의 구성은 의미론적 유사성 검색뿐만 아니라 클러스터링과 같은 감독되지 않은 작업에도 적합하지 않다.
+
+ In this publication, we present Sentence-BERT (SBERT), a modification of the pretrained BERT network that use siamese and triplet net- work structures to derive semantically mean- ingful sentence embeddings that can be com- pared using cosine-similarity.
+이 간행물에서는 코사인 유사성을 사용하여 비교할 수 있는 의미론적으로 의미 있는 문장 임베딩을 도출하기 위해 샴 및 트리플렛 네트워크 구조를 사용하는 사전 훈련된 BERT 네트워크의 수정인 SBERT(Sentence-BERT)를 제시한다.
+
+This reduces the effort for finding the most similar pair from 65 hours with BERT / RoBERTa to about 5 sec- onds with SBERT, while maintaining the ac- curacy from BERT.
+이를 통해 BERT의 정확도를 유지하면서 가장 유사한 쌍을 찾는 노력을 BERT / RoBERTa에서 65시간에서 SBERT에서 약 5초로 줄일 수 있다.
+
+ We evaluate SBERT and SRoBERTa on com- mon STS tasks and transfer learning tasks, where it outperforms other state-of-the-art sentence embeddings methods.
+우리는 일반적인 STS 작업과 전송 학습 작업에 대해 SBERT와 SRoBERTa를 평가하며, 여기서 다른 최첨단 문장 임베딩 방법을 능가한다.
+
+ Introduction
+서론
+
+ tic similarity comparison, clustering, and informa- tion retrieval via semantic search.
+의미 검색을 통한 틱 유사성 비교, 클러스터링 및 정보 검색.
+
+ BERT set new state-of-the-art performance on various sentence classification and sentence-pair regression tasks.
+BERT는 다양한 문장 분류 및 문장 쌍 회귀 작업에 대한 새로운 최신 성능을 설정했다.
+
+BERT uses a cross-encoder: Two sentences are passed to the transformer network and the target value is predicted.
+BERT는 크로스 인코더를 사용한다: 두 문장을 트랜스포머 네트워크에 전달하고 목표값을 예측한다.
+
+However, this setup is unsuitable for various pair regression tasks due to too many possible combinations.
+그러나 이 설정은 가능한 조합이 너무 많아 다양한 쌍 회귀 작업에 적합하지 않다.
+
+Finding in a collection of n = 10000 sentences the pair with the highest similarity requires with BERT n-(n—1)/2 = 49 995 000 inference computations.
+유사도가 가장 높은 쌍은 BERT n-(n-1)/2 = 49995,000개의 추론 계산으로 n = 100,000개의 문장 모음에서 찾는다.
+
+On a modern V100 GPU, this requires about 65 hours.
+최신 V100 GPU에서는 약 65시간이 소요됩니다.
+
+Similar, finding which of the over 40 mil- lion existent questions of Quora is the most similar for a new question could be modeled as a pair-wise comparison with BERT, however, answering a sin- gle query would require over 50 hours.
+유사하게, 쿼라의 존재하는 4천만 개 이상의 질문 중 어떤 질문이 새로운 질문과 가장 유사한지 알아내는 것은 BERT와의 쌍별 비교로 모델링될 수 있지만, 단일 질문에 답하려면 50시간 이상이 필요하다.
+
+ A common method to address clustering and se- mantic search is to map each sentence to a vec- tor space such that semantically similar sentences are close.
+클러스터링 및 시맨틱 검색을 해결하는 일반적인 방법은 의미론적으로 유사한 문장이 근접하도록 각 문장을 벡터 공간에 매핑하는 것이다.
+
+Researchers have started to input indi- vidual sentences into BERT and to derive fixed- size sentence embeddings.
+연구자들은 BERT에 개별 문장을 입력하고 고정된 크기의 문장 임베딩을 도출하기 시작했다.
+
+The most commonly used approach is to average the BERT output layer (known as BERT embeddings) or by using the out- put of the first token (the [CLS] token).
+가장 일반적으로 사용되는 접근법은 BERT 출력 계층(BERT 임베딩이라고 함)을 평균화하거나 첫 번째 토큰([CLS] 토큰)의 출력을 사용하는 것이다.
+
+As we will show, this common practice yields rather bad
+우리가 보여주겠지만, 이 일반적인 관행은 다소 나쁜 결과를 낳습니다
+
+arX1v:1908.10084v1 [cs.CL] 27 Aug 2019
+arX1v:1908.10084v1 [cs.CL] 2019년 8월 27일
+
+ Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks
+문장-BERT: Samese BERT-Networks를 이용한 문장 임베딩
+
+ Nils Reimers and Iryna Gurevych Ubiquitous Knowledge Processing Lab (UKP-TUDA) Department of Computer Science, Technische Universitit Darmstadt www.ukp.tu-darmstadt .de
+닐스 라이머스와 이리나 구레비치 유비쿼터스 지식 처리 연구소(UKP-TUDA) 컴퓨터 과학과 다름슈타트 www.ukp.tu-darm슈타트.de
+
+ Abstract
+추상적인
+
+ BERT (Devlin et al., 2018) and RoBERTa (Liu et al., 2019) has set a new state-of-the-art performance on sentence-pair regression tasks like semantic textual similarity (STS).
+BERT(Devlin et al., 2018)와 RoBERTa(Liu et al., 2019)는 의미론적 텍스트 유사성(STS)과 같은 문장 쌍 회귀 작업에 대한 새로운 최신 성능을 설정했다.
+
+How- ever, it requires that both sentences are fed into the network, which causes a massive com- putational overhead: Finding the most sim- r in a collection of 10,000 sentences about 50 million inference computa- tions (~65 hours) with BERT.
+그러나 두 문장이 모두 네트워크에 입력되어야 하며, 이는 엄청난 계산 오버헤드를 야기한다: BERT로 약 5천만 개의 추론 계산(~65시간)에 대해 10,000개의 문장 모음에서 가장 유사한 것을 찾는다.
+
+The construction of BERT makes it unsuitable for semantic sim- ilarity search as well as for unsupervised tasks like clustering.
+BERT의 구성은 의미론적 유사성 검색뿐만 아니라 클러스터링과 같은 감독되지 않은 작업에도 적합하지 않다.
+
+ In this publication, we present Sentence-BERT (SBERT), a modification of the pretrained BERT network that use siamese and triplet net- work structures to derive semantically mean- ingful sentence embeddings that can be com- pared using cosine-similarity.
+이 간행물에서는 코사인 유사성을 사용하여 비교할 수 있는 의미론적으로 의미 있는 문장 임베딩을 도출하기 위해 샴 및 트리플렛 네트워크 구조를 사용하는 사전 훈련된 BERT 네트워크의 수정인 SBERT(Sentence-BERT)를 제시한다.
+
+This reduces the effort for finding the most similar pair from 65 hours with BERT / RoBERTa to about 5 sec- onds with SBERT, while maintaining the ac- curacy from BERT.
+이를 통해 BERT의 정확도를 유지하면서 가장 유사한 쌍을 찾는 노력을 BERT / RoBERTa에서 65시간에서 SBERT에서 약 5초로 줄일 수 있다.
+
+ We evaluate SBERT and SRoBERTa on com- mon STS tasks and transfer learning tasks, where it outperforms other state-of-the-art sentence embeddings methods.
+우리는 일반적인 STS 작업과 전송 학습 작업에 대해 SBERT와 SRoBERTa를 평가하며, 여기서 다른 최첨단 문장 임베딩 방법을 능가한다.
+
+ Introduction
+서론
+
+ tic similarity comparison, clustering, and informa- tion retrieval via semantic search.
+의미 검색을 통한 틱 유사성 비교, 클러스터링 및 정보 검색.
+
+ BERT set new state-of-the-art performance on various sentence classification and sentence-pair regression tasks.
+BERT는 다양한 문장 분류 및 문장 쌍 회귀 작업에 대한 새로운 최신 성능을 설정했다.
+
+BERT uses a cross-encoder: Two sentences are passed to the transformer network and the target value is predicted.
+BERT는 크로스 인코더를 사용한다: 두 문장을 트랜스포머 네트워크에 전달하고 목표값을 예측한다.
+
+However, this setup is unsuitable for various pair regression tasks due to too many possible combinations.
+그러나 이 설정은 가능한 조합이 너무 많아 다양한 쌍 회귀 작업에 적합하지 않다.
+
+Finding in a collection of n = 10000 sentences the pair with the highest similarity requires with BERT n-(n—1)/2 = 49 995 000 inference computations.
+유사도가 가장 높은 쌍은 BERT n-(n-1)/2 = 49995,000개의 추론 계산으로 n = 100,000개의 문장 모음에서 찾는다.
+
+On a modern V100 GPU, this requires about 65 hours.
+최신 V100 GPU에서는 약 65시간이 소요됩니다.
+
+Similar, finding which of the over 40 mil- lion existent questions of Quora is the most similar for a new question could be modeled as a pair-wise comparison with BERT, however, answering a sin- gle query would require over 50 hours.
+유사하게, 쿼라의 존재하는 4천만 개 이상의 질문 중 어떤 질문이 새로운 질문과 가장 유사한지 알아내는 것은 BERT와의 쌍별 비교로 모델링될 수 있지만, 단일 질문에 답하려면 50시간 이상이 필요하다.
+
+ A common method to address clustering and se- mantic search is to map each sentence to a vec- tor space such that semantically similar sentences are close.
+클러스터링 및 시맨틱 검색을 해결하는 일반적인 방법은 의미론적으로 유사한 문장이 근접하도록 각 문장을 벡터 공간에 매핑하는 것이다.
+
+Researchers have started to input indi- vidual sentences into BERT and to derive fixed- size sentence embeddings.
+연구자들은 BERT에 개별 문장을 입력하고 고정된 크기의 문장 임베딩을 도출하기 시작했다.
+
+The most commonly used approach is to average the BERT output layer (known as BERT embeddings) or by using the out- put of the first token (the [CLS] token).
+가장 일반적으로 사용되는 접근법은 BERT 출력 계층(BERT 임베딩이라고 함)을 평균화하거나 첫 번째 토큰([CLS] 토큰)의 출력을 사용하는 것이다.
+
+As we will show, this common practice yields rather bad
+우리가 보여주겠지만, 이 일반적인 관행은 다소 나쁜 결과를 낳습니다
