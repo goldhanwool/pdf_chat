@@ -1,0 +1,9 @@
+
+469>>-----------------------------------------
+
+3.2.1 Scaled Dot-Product Attention
+We call our particular attention "Scaled Dot-Product Attention" (Figure 2). The input consists of queries and keys of dimension d,, and values of dimension d,. We compute the dot products of the query with all keys, divide each by dy
+-----------------------------------------
+3.2.1 스케일 도트-제품 주의
+우리는 우리의 특별한 관심을 "스케일드 도트-프로덕트 어텐션"이라고 부릅니다(그림 2). 입력은 차원 d의 쿼리 및 키, 차원 d의 값으로 구성된다. 우리는 모든 키로 쿼리의 도트 곱을 계산하고, 각각을 dy로 나눈다
+-----------------------------------------

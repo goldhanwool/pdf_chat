@@ -1,0 +1,78 @@
+
+Quantitative Results
+정량적 결과
+
+ Bolded values dictate which model scored highest in a given metric across the models on the same table.
+굵게 표시된 값은 동일한 표의 모델에 걸쳐 주어진 메트릭에서 가장 높은 점수를 받은 모델을 나타냅니다.
+
+Starred (*) values dictate which model scored highest in a given metric across all the tables.
+별첨(*) 값은 모든 표에서 주어진 메트릭에서 가장 높은 점수를 받은 모델을 나타냅니다.
+
+ Baseline results:
+기준 결과:
+
+ Model BERT (Ext) | BERT-pub (Ext) | BART (Abs) | BART/BERT | BART/BERT-pub ROUGE-I Precision 26.1 25.3 51.9 50.5 50.3 ROUGE-I Recall 61.5 63.2* 18.8 18.6 18.3 ROUGE-1 FI 33.8 34.8 26.2 25.7 25.4 ROUGE-2 Precision 9.5 9.9 18.5 16.2 16.7 ROUGE-2 Recall 22.0 25.4* 6.6 5.7 6.0 ROUGE-2 Fl 12.0 13.7* 9.3 8.0 8.3 ROUGE-L Precision 13.6 12.8 33.8* 32.0 32.6 ROUGE-L Recall 319 33.7 12.2 11.7 11.8 ROUGE-L F1 17.3 17.9 17.0 16.1 16.4 Avg Length (words) 536 502 61 62 62 Finetuned results: Model BART S5e/BERT | BART 5e/BERT-pub | BART 3e/BERT | BART 3e/BERT-pub ROUGE-I Precision 52.7* 49.9 52.0 49.7 ROUGE-I Recall 30.6 28.8 29.8 28.5 ROUGE-1 FI 36.7* 34.7 36.0 34.4 ROUGE-2 Precision 19.8* 18.8 19.2 18.5 ROUGE-2 Recall 113 10.6 10.9 10.5 ROUGE-2 FI 13.6 12.9 13.2 12.7 ROUGE-L Precision 31.0 30.0 30.6 30.2 ROUGE-L Recall 18.1 174 17.7 17.3 ROUGE-L F1 21.7* 20.9 21.2 20.9 Avg Length (words) 105 105 104 104
+모델 BERT (Ext) | BERT-pub (Ext) | BART (Abs) | BART/BERT | BART/BERT-PUB ROUGE-I Precision 26.1 25.3 51.9 50.5 50.3 ROUGE-I 리콜 61.5 63.2* 18.8 18.6 18.3 ROUGE-1 FI 33.8 34.8 26.7 25.7 25.4 ROUGE-2 Precision 9.5 18.5 16.7 ROUGE-2 리콜 22.0 25.4* 6.6 5.7 6.7 6.0 ROUGE-2 Fl 12.0 13.7* 9.3 8.3 8.3 ROUGE-L Precision 13.6 12.8 33.8* 32.0 32.4* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 10.7* 12.7* 12.7* 12.8* 12.8* 12.8* 32.0 32.7* 10.7* 10.7* 10.7* 10.7* 10.8* 12.0 32.7* 12.0 12.8* 12.8* 12.8* 12.8* 12.8* 32.0 32.0* 10.7* 12.0 32.7* 12.0* 12.0 32.6 ROUGE-L 리콜 319 33.7 12.2 11.7 11.8 ROUGE-L F1 17.3 17.9 17.0 16.1 16.4 평균 길이 (단어) 536 502 662 62 미세조정 결과: 모델 BART S5e/BERT | BART 5e/BERT-pub | BART 3e/BERT -BERT | BART 3e/BERT - PUB-I Precision 52.7* 49.9 52.0 49.7 ROUGE-I 리콜 30.6 28.8 29.8 28.5 ROUGE-1 FI 36.7* 34.7 36.0 34.4 ROUGE-2 Precision 19.8* 18.8 19.2 18.0 18.0 28.0 28.0 28.7 ROUGE-I 리콜 30.6 28.8 28.8 28.5 ROUGE-1 FI 36.7* 34.7 0 34.0 34.4 ROUGE-2 Precision 19.2 18.0 28.8 28.7 18.0 28.8 28.8 28.5 ROUGE-1 FI 36.7* 18.0 18.0 18.0 18.0 18.0 18.0 18.0 18.0 18.8.0 18.8.0 18.0 18.9.0 18.0 18.8.0 18.8.0 28.8.5 ROUGE-2 리콜 113 10.6 10.9 10.5 ROUGE-2 FI 13.6 12.9 13.2 12.7 ROUGE-L 정밀도 31.0 30.0 30.6 30.2 ROUGE-L 리콜 18.1 174 17.7 17.3 ROUGE-L F1 21.7* 20.9 21.2 20.9 평균 길이 (단어) 105 104
+
+ In the table above, BART Se refers to the BERT model finetuned for 5 epochs, and BART 3e to the 3
+위의 표에서 BART Se는 5epoch 동안 미세 조정된 BERT 모형을 의미하며, BART 3e는 3을 의미한다
+
+ epoch model.
+획기적인 모델.
+
+ Original Paper Results:
+원본 논문 결과:
+
+ Model Lead-10 (Ext) | Sent-CLF (Ext) | SentpTR(Ext) | TLM-I (Abs) | TLM-I+E(G.M) (Mix) | ROUGE-1 Recall 37.45 45.01 43.30 37.06 42.13
+모델리드-10 (Ext) | Sent-CLF (Ext) | SentpTR (Ext) | TLM-I (Abs) | TLM-I E (G.M) (믹스) | ROUGE-1 리콜 37.45 45.01 43.30 37.06 42.13
+
+ | ROUGE-2 Recall 14.19 19.91 17.92 11.69 16.27
+| ROUGE-2 리콜 14.19 19.91 17.92 11.69 16.27
+
+ | ROUGE-L Recall 34.07 41.16* 39.47 34.27 39.21
+| ROUGE-L 리콜 34.07 41.16* 39.47 34.27 39.21
+
+ 5 Analysis
+5 분석
+
+ Extractive Model
+추출 모델
+
+ In their paper, Subramanian et.
+그들의 논문에서, Subramanian et.
+
+al.
+알.
+
+introduce two novel aj
+소설 aj를 두 개 소개하다
+
+ pproaches to long document summarization
+긴 문서 요약에 접근하다
+
+ - splitting the process into an extractive and abstractive step, and employing transformers for the
+- 프로세스를 추출적이고 추상적인 단계로 분할하고, 다음을 위해 변압기를 사용합니다
+
+ abstractive step.
+추상적인 걸음.
+
+We expand on this methodology by ai
+우리는 AI를 통해 이 방법론을 확장합니다
+
+ opting their two-fold approach, while also
+그들의 이중 접근 방식을 선택하는 동시에
+
+ testing the effectiveness of using a transformer model for the extractive step.
+추출 단계를 위해 변압기 모델을 사용하는 것의 효과를 테스트합니다.
+
+Our hypothesis was that utilizing a transformer for the extraction would further improve summarization results.
+우리의 가설은 추출을 위해 변압기를 사용하면 요약 결과가 더욱 향상될 것이라는 것이었다.
+
+Our results using the ROUGE metrics show that both of our extractive transformers were able to achieve higher ROUGE scores than the three extractors that the authors tested, supporting our hypothesis.
+ROUGE 메트릭을 사용한 결과는 두 추출 변압기 모두 저자가 테스트한 세 가지 추출기보다 더 높은 ROUGE 점수를 달성할 수 있었으며 이는 우리의 가설을 뒷받침한다.
+
+ This was expected, since in general transformers have demonstrated the ability to outperform a wide range of legacy models on various tasks.
+이것은 일반적으로 변압기가 다양한 작업에서 광범위한 레거시 모델을 능가하는 능력을 입증했기 때문에 예상된 것이다.
+
+More specifically, because transformers are trained on large corpuses, they develop a better understanding of the natural language, and are therefore able
+좀 더 구체적으로, 변압기는 큰 코퍼스에서 훈련되기 때문에, 그들은 자연 언어에 대한 더 나은 이해를 발달시키고, 따라서 가능하다
